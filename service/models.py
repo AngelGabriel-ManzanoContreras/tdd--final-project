@@ -120,7 +120,7 @@ class Product(db.Model):
             "description": self.description,
             "price": str(self.price),
             "available": self.available,
-            "category": self.category.name  # convert enum to string
+            "category": self.category.name if isinstance(self.category, Category) else self.category # convert enum to string
         }
 
     def deserialize(self, data: dict):

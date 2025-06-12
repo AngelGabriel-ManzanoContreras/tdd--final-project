@@ -104,3 +104,95 @@ class TestProductModel(unittest.TestCase):
     #
     # ADD YOUR TEST CASES HERE
     #
+    
+    def test_find_a_product(self):
+        """It should Find a product by ID"""
+        product = ProductFactory()
+        product.create()
+        found = Product.find(product.id)
+        self.assertIsNotNone(found)
+        self.assertEqual(found.id, product.id)
+        self.assertEqual(found.name, product.name)
+
+    def test_find_all_products(self):
+        """It should Find all products"""
+        products = ProductFactory.create_batch(3)
+        for p in products:
+            p.create()
+        all_products = Product.all()
+        self.assertEqual(len(all_products), 3)
+
+    def test_update_a_product(self):
+        """It should Update a product"""
+        product = ProductFactory()
+        product.create()
+        product.name = "UpdatedName"
+        product.price = 99.99
+        product.update()
+        updated = Product.find(product.id)
+        self.assertEqual(updated.name, "UpdatedName")
+        self.assertEqual(float(updated.price), 99.99)
+
+    def test_delete_a_product(self):
+        """It should Delete a product"""
+        product = ProductFactory()
+        product.create()
+        product_id = product.id
+        product.delete()
+        self.assertIsNone(Product.find(product_id))
+
+    def test_serialize_a_product(self):
+        """It should Serialize a product"""
+        product = ProductFactory()
+        product.create()
+        data = product.serialize()
+        self.assertIsInstance(data, dict)
+        self.assertEqual(data["id"], product.id)
+        self.assertEqual(data["name"], product.name)
+
+    def test_deserialize_a_product(self):
+        """It should Deserialize a product"""
+        product = ProductFactory()
+        product.create()
+        data = {
+            "name": "DeserializedName",
+            "description": "Deserialized description",
+            "price": 45.67,
+            "available": False,
+            "category": Category.CLOTHS.name,
+        }
+        product.deserialize(data)
+        self.assertEqual(product.name, "DeserializedName")
+        self.assertEqual(product.description, "Deserialized description")
+        self.assertEqual(float(product.price), 45.67)
+        self.assertFalse(product.available)
+        self.assertEqual(product.category, Category.CLOTHS)
+
+    def test_find_by_name(self):
+        """It should Find products by name"""
+        product = ProductFactory(name="UniqueName")
+        product.create()
+        found = Product.find_by_name("UniqueName").all()
+        self.assertEqual(len(found), 1)
+        self.assertEqual(found[0].id, product.id)
+
+    def test_find_by_price(self):
+        """It should Find products by price"""
+        product = ProductFactory(price=12.34)
+        product.create()
+        found = Product.find_by_price(12.34)
+        self.assertTrue(any(p.id == product.id for p in found))
+
+    def test_find_by_availability(self):
+        """It should Find products by availability"""
+        product = ProductFactory(available=True)
+        product.create()
+        found = Product.find_by_availability(True)
+        self.assertTrue(any(p.id == product.id for p in found))
+
+    def test_find_by_category(self):
+        """It should Find products by category"""
+        product = ProductFactory(category=Category.CLOTHS)
+        product.create()
+        found = Product.find_by_category(Category.CLOTHS)
+        self.assertTrue(any(p.id == product.id for p in found))

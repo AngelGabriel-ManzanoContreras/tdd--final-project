@@ -1,5 +1,5 @@
 # Image to simulate Skills Network cloud environment
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
