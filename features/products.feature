@@ -38,3 +38,83 @@ Scenario: Create a Product
     And I should see "True" in the "Available" dropdown
     And I should see "Tools" in the "Category" dropdown
     And I should see "34.95" in the "Price" field
+
+Scenario: Read a Product
+    When I visit the "Home Page"
+    And I set the "Name" to "Hat"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "Hat" in the results
+
+Scenario: Update a Product
+    When I visit the "Home Page"
+    And I set the "Name" to "Hat"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "Hat" in the results
+    When I change the "Price" to "49.95"
+    And I press the "Update" button
+    Then I should see the message "Success"
+    When I copy the "Id" field
+    And I press the "Clear" button
+    And I paste the "Id" field
+    And I press the "Retrieve" button
+    Then I should see the message "Success"
+    And I should see "49.95" in the "Price" field
+    When I press the "Clear" button
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "49.95" in the results
+
+Scenario: Delete a Product
+    When I visit the "Home Page"
+    And I set the "Name" to "Hat"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "Hat" in the results
+    When I copy the "Id" field
+    And I press the "Clear" button
+    And I paste the "Id" field
+    And I press the "Delete" button
+    Then I should see the message "Product has been Deleted!"
+    When I press the "Clear" button
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should not see "Hat" in the results
+
+Scenario: List All Products
+    When I visit the "Home Page"
+    And I press the "Clear" button
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "Hat" in the results
+    And I should see "Shoes" in the results
+    And I should see "Big Mac" in the results
+    And I should see "Sheets" in the results
+
+Scenario: Search Product by Category
+    When I visit the "Home Page"
+    And I press the "Clear" button
+    And I select "Food" in the "Category" dropdown
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "Big Mac" in the results
+    And I should not see "Hat" in the results
+    And I should not see "Sheets" in the results
+
+Scenario: Search Product by Availability
+    When I visit the "Home Page"
+    And I set the "Available" dropdown to "True"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "Hat" in the results
+    And I should see "Big Mac" in the results
+    And I should see "Sheets" in the results
+    And I should not see "Shoes" in the results
+
+Scenario: Search Product by Name
+    When I visit the "Home Page"
+    And I set the "Name" to "Hat"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "Hat" in the results
